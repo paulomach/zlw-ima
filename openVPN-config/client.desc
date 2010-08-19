@@ -1,0 +1,18 @@
+Phisical Interface connect to the MRx 
+bridged with the tap0 (tunneled) interface
+
+1. create tap0 interface with
+$ openvpn --mktun --dev tap0
+
+2. create bridge
+$ brctl addbr <bridge name>
+
+3. Add interfaces to the bridge
+$ brctl addif <bridge name> <phisical iface>
+$ brctl addif <bridge name> tap0
+
+4. Start bridge
+$ ifconfig <bridge name> up
+
+5. Start openvpn as client
+$ openvpn <path to client config file>
