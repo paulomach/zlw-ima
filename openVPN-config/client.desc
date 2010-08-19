@@ -1,6 +1,9 @@
 Phisical Interface connect to the MRx 
 bridged with the tap0 (tunneled) interface
 
+0. start tunneling capabilities
+$ modprobe tun
+
 1. create tap0 interface with
 $ openvpn --mktun --dev tap0
 

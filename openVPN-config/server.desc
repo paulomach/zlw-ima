@@ -1,5 +1,8 @@
 vmware network interface bridge to tap0 (tunneled) interface
 
+0. Start tunneling capabilities
+$ modprobe tun
+
 1. tap0 created with
 $ openvpn --mktun --dev tap0
 
