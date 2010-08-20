@@ -1,0 +1,34 @@
+teefuerzweifix
+	eth1 --> WANem
+	subnet with WANem
+	crossover cable
+	IP: 192.168.2.2
+	MASK: 255.255.255.0
+	GW: 192.168.2.1
+	-----------------------
+	eth0 --> MRx
+	croosover cable
+	bridge with tun/tap iface
+
+WANem
+	eth0 --> zlw LAN
+	subnet with visacardus
+	IP: 192.168.1.1
+	MASK: 255.255.255.0
+	---------------------
+	eth1 --> teefuerzweifix
+	crossover cable
+	subnet with teefuerzweifix
+	IP: 192.168.2.1
+	MASK: 255.255.255.0
+
+visacardus
+	eth1:1 --> WANem
+	subnet with WANem
+	IP: 192.168.1.2
+	MASK: 255.255.255.0
+	Add route!
+	-----------------
+	tun0/tap0 bridged with
+	vm interface
+
