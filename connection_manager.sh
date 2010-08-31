@@ -8,12 +8,13 @@ LOGF=/var/log/connection.log
 LOGCMD="logger -s"
 T0=0
 T1=0
+i=0
 
 connect() {
 	$LOGCMD "Starting wvdial connection"
 	[ -n ${CONF} ] && wvdial ${CONF} &
 	[ $? -eq 1 ] && $LOGCMD "Modem not responding" 
-	sleep 3
+	sleep 5
 	WPID=$(pgrep wvdial)
 	PPPPID=$(pgrep pppd)
 	[ $? -ne 0 ] && connect || $LOGCMD "Connection stabilished"
@@ -51,8 +52,16 @@ check() {
 	# TODO: pings tunnel? AT commands?
 	update_diff_counter	
 	elif [ $T1 -eq 0 ]; then
-		RET=1
-	else 
+		let i++
+		if [ $i -eq 3 ]; then
+			RET=1
+		elif [ $i -gt 3 ]; then
+			RET=2
+		else
+			RET=0
+		fi
+	else
+		i=0
 		RET=0
 	fi
 }
