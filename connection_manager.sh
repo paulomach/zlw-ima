@@ -35,6 +35,7 @@ terminate() {
 }
 
 update_diff_counter() {
+# check for received data segments
 	T0=$(netstat -st|grep -A 8 Tcp:|grep "segments received"|cut -d" " -f 5)
 	ping -c1 google.com &> /dev/null
 	sleep 1
@@ -49,7 +50,6 @@ check() {
 		$LOGCMD "pppd and/or dialer not running"
 		RET=1
 	# 2nd check: the connection is really up?
-	# TODO: pings tunnel? AT commands?
 	update_diff_counter	
 	elif [ $T1 -eq 0 ]; then
 		let i++
