@@ -14,7 +14,7 @@ connect() {
 	$LOGCMD "Starting wvdial connection"
 	[ -n ${CONF} ] && wvdial ${CONF} &
 	[ $? -eq 1 ] && $LOGCMD "Modem not responding" 
-	sleep 5
+	sleep 8
 	WPID=$(pgrep wvdial)
 	PPPPID=$(pgrep pppd)
 	[ $? -ne 0 ] && connect || $LOGCMD "Connection stabilished"
@@ -29,7 +29,7 @@ reconnect() {
 terminate() {
 	$LOGCMD "Killing connection"
 	kill -9 ${PPPPID} ${WPID}
-	sleep 3
+	sleep 2
 	PPPPID=$(pgrep pppd)
 	[ -n $? ] && [ $? -ne 0 ] && terminate
 }
@@ -37,8 +37,8 @@ terminate() {
 update_diff_counter() {
 # check for received data segments
 	T0=$(netstat -st|grep -A 8 Tcp:|grep "segments received"|cut -d" " -f 5)
-	ping -c1 google.com &> /dev/null
-	sleep 1
+	ping -c2 google.com &> /dev/null
+	sleep 4
 	let T1=$(netstat -st|grep -A 8 Tcp:|grep "segments received"|cut -d" " -f 5)-$T0
 }
 
@@ -50,12 +50,12 @@ check() {
 		$LOGCMD "pppd and/or dialer not running"
 		RET=1
 	# 2nd check: the connection is really up?
-	update_diff_counter	
 	elif [ $T1 -eq 0 ]; then
 		let i++
-		if [ $i -eq 3 ]; then
+		if [ $i -eq 7 ]; then
+			i=0
 			RET=1
-		elif [ $i -gt 3 ]; then
+		elif [ $i -gt 10 ]; then
 			RET=2
 		else
 			RET=0
@@ -74,10 +74,10 @@ connect
 # Main loop
 while true; do
 # different treatment to different problems
-	sleep 7
+	update_diff_counter
 	check 
+	echo T0 $T0 - T1 $T1 - i $i
 	[ $RET -eq 1 ] && reconnect
-	[ $RET -eq 2 ] && /sbin/reboot
-
+	[ $RET -eq 2 ] && echo REBOOT
 done
 
