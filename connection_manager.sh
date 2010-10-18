@@ -28,7 +28,7 @@ reconnect() {
 
 terminate() {
 	$LOGCMD "Killing connection"
-	kill -9 ${PPPPID} ${WPID}
+	kill -9 ${PPPPID} ${WPID} &> /dev/null
 	sleep 2
 	PPPPID=$(pgrep pppd)
 	[ -n $? ] && [ $? -ne 0 ] && terminate
@@ -52,10 +52,10 @@ check() {
 	# 2nd check: the connection is really up?
 	elif [ $T1 -eq 0 ]; then
 		let i++
-		if [ $i -eq 7 ]; then
+		if [ $i -eq 15 ]; then
 			i=0
 			RET=1
-		elif [ $i -gt 10 ]; then
+		elif [ $i -gt 20 ]; then
 			RET=2
 		else
 			RET=0
